@@ -23,6 +23,25 @@ export const getSmurfs = () => dispatch => {
     })
 }
 
+export const addSmurf = smurf => dispatch => {
+  dispatch({ type: FETCHING });
+  axios
+    .post('http://localhost:3333/smurfs', smurf)
+    .then(res => {
+      dispatch({ 
+        type: SUCCESS,
+        payload: res.data
+      })
+    })
+    .catch(err => {
+      console.log(err.response);
+      dispatch({
+        type: FAILURE,
+        payload: err
+      });
+    })
+}
+
 /*
   For this project you'll need at least 2 action creators for the main portion,
    and 2 more for the stretch problem.
