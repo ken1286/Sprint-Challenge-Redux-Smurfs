@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import { getSmurfs, addSmurf } from '../actions';
+import { getSmurfs, addSmurf, deleteSmurf } from '../actions';
 import { connect } from "react-redux";
 import AddForm from './AddForm';
 /*
@@ -13,6 +13,10 @@ class App extends Component {
 
   componentDidMount() {
     this.props.getSmurfs();
+  }
+
+  deleteSmurf = id => {
+    this.props.deleteSmurf(id)
   }
 
   render() {
@@ -33,6 +37,7 @@ class App extends Component {
             <h2>{smurf.name}</h2>
             <p>{smurf.age}</p>
             <p>{smurf.height}</p>
+            <button onClick={() => this.deleteSmurf(smurf.id)}>Delete Smurf</button>
           </div>
         )
       })}
@@ -50,6 +55,6 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   {
-    getSmurfs, addSmurf
+    getSmurfs, addSmurf, deleteSmurf
   }
 )(App);
