@@ -60,6 +60,24 @@ export const deleteSmurf = id => dispatch => {
     })
 }
 
+export const updateSmurf = (id, smurf) => dispatch => {
+  axios
+    .put(`http://localhost:3333/smurfs/${id}`, smurf)
+    .then(res => {
+      dispatch({ 
+        type: SUCCESS,
+        payload: res.data
+      })
+    })
+    .catch(err => {
+      console.log(err.response);
+      dispatch({
+        type: FAILURE,
+        payload: err
+      });
+    })
+}
+
 
 
 /*
