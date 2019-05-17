@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import './App.css';
+import { getSmurfs, addSmurf, deleteSmurf, updateSmurf } from '../actions';
+import { connect } from "react-redux";
+import AddForm from './AddForm';
+import UpdateForm from './UpdateForm';
 /*
  to wire this component up you're going to need a few things.
  I'll let you do this part on your own. 
@@ -7,16 +11,58 @@ import './App.css';
  `How do I ensure that my component links the state to props?`
  */
 class App extends Component {
+
+  componentDidMount() {
+    this.props.getSmurfs();
+  }
+
+  deleteSmurf = id => {
+    this.props.deleteSmurf(id)
+  }
+
+  updateSmurf =  (id, smurf) => {
+    this.props.updateSmurf(id, smurf);
+  }
+
   render() {
+    if (this.props.isFetching) {
+      // return something here to indicate that you are fetching data
+      return (
+      <h2>LOADING...</h2>
+      )
+    }
+
     return (
       <div className="App">
-        <h1>SMURFS! 2.0 W/ Redux</h1>
-        <div>Welcome to your Redux version of Smurfs!</div>
-        <div>Start inside of your `src/index.js` file!</div>
-        <div>Have fun!</div>
+        <AddForm addSmurf={this.props.addSmurf} />
+
+        {this.props.smurfs.map( smurf => {
+        return (
+          <div key={smurf.id}>
+            <h2>{smurf.name}</h2>
+            <p>{smurf.age}</p>
+            <p>{smurf.height}</p>
+            <button onClick={() => this.deleteSmurf(smurf.id)}>Delete Smurf</button>
+            <UpdateForm 
+              updateSmurf={this.updateSmurf} smurfId={smurf.id}
+              />
+          </div>
+        )
+      })}
       </div>
     );
   }
 }
 
-export default App;
+const mapStateToProps = state => ({
+  smurfs: state.smurfs,
+  isFetching: state.isFetching
+});
+// our mapStateToProps needs to have two properties inherited from state
+// the characters and the fetching boolean
+export default connect(
+  mapStateToProps,
+  {
+    getSmurfs, addSmurf, deleteSmurf, updateSmurf
+  }
+)(App);
